@@ -21,7 +21,7 @@ public class Gun : MonoBehaviour
     private void Update()
     {
         Shoot();
-        RotateCursor();
+        RotateGunTowardCursor();
     }
 
     private void Shoot()
@@ -38,16 +38,11 @@ public class Gun : MonoBehaviour
         newBullet.Init(_bulletSpawnPoint.position, Mouse.current.position.ReadValue());
     }
 
-    private void RotateCursor()
-    {
-        _cursorManager.RotateCursor();
-            RotateGunTowardCursor();
-    }
-
     private void RotateGunTowardCursor()
     {
         _mousePosition = Mouse.current.position.ReadValue();
-        Vector2 direction = _mousePosition - (Vector2) PlayerController.Instance.transform.position;
+        // Vector2 direction = _mousePosition - (Vector2) PlayerController.Instance.transform.position;
+        Vector2 direction = PlayerController.Instance.transform.InverseTransformPoint(_mousePosition);
 
         float angle = Mathf.Clamp(Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg, -75f, 75f);
         transform.localRotation = Quaternion.Euler(0, 0, angle);

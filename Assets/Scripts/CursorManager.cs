@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class CursorManager : MonoBehaviour
 {
-    private SpriteRenderer cursorImage;
+    private SpriteRenderer _cursorSprite;
 
     void Awake()
     {
-        cursorImage = GetComponent<SpriteRenderer>();
+        _cursorSprite = GetComponent<SpriteRenderer>();
     }
 
     void Start()
@@ -32,10 +32,6 @@ public class CursorManager : MonoBehaviour
     public void RotateCursor()
     {
         Vector2 currentMousePosition = Mouse.current.position.ReadValue();
-        // cursorImage.transform.position = currentMousePosition;
-
-        Vector2 direction = PlayerController.Instance.transform.InverseTransformPoint(currentMousePosition);
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        cursorImage.transform.localRotation = Quaternion.Euler(0, 0, angle);
+        _cursorSprite.transform.position = currentMousePosition;
     }
 }
