@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = 10f;
+    [SerializeField] private float _bulletSpeed = 20f;
     [SerializeField] private int _damageAmount = 1;
 
     private Vector2 _fireDirection;
@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _rb.linearVelocity = _fireDirection * _moveSpeed;
+        _rb.linearVelocity = _fireDirection * _bulletSpeed;
     }
 
     private void OnTriggerEnter2D(Collider2D other) 

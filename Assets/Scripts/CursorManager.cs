@@ -5,10 +5,12 @@ using UnityEngine.UI;
 public class CursorManager : MonoBehaviour
 {
     private SpriteRenderer _cursorSprite;
+    private Camera _mainCamera;
 
     void Awake()
     {
         _cursorSprite = GetComponent<SpriteRenderer>();
+        _mainCamera = Camera.main;
     }
 
     void Start()
@@ -31,7 +33,14 @@ public class CursorManager : MonoBehaviour
 
     public void RotateCursor()
     {
-        Vector2 currentMousePosition = Mouse.current.position.ReadValue();
+        if (_mainCamera == null)
+        {
+            _mainCamera = Camera.main;
+            if (_mainCamera == null) return;
+        }
+
+        Vector3 currentMousePosition = _mainCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        currentMousePosition.z = 0f;
         _cursorSprite.transform.position = currentMousePosition;
     }
 }
