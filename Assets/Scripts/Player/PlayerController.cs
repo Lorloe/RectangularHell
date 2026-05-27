@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate() 
     {
-        Move();
+        OnMove();
     }
 
     private void GatherInput()
@@ -55,7 +55,9 @@ public class PlayerController : MonoBehaviour
         _movement = new Vector2 (moveInput.x * _moveSpeed, _rb.linearVelocity.y);
     }
 
-    private void Move() 
+    #region ACTION
+
+    private void OnMove() 
     {
         _rb.linearVelocity = _movement;
     }
@@ -66,6 +68,10 @@ public class PlayerController : MonoBehaviour
             _rb.AddForce(Vector2.up * _jumpStrength, ForceMode2D.Impulse);
         }
     }
+
+    #endregion
+
+    #region SPRITE FLIP
 
     private void HandleSpriteFlip()
     {
@@ -81,6 +87,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool IsFacingRight()
+    {
+        return transform.eulerAngles.y < 90f || transform.eulerAngles.y > 270f;
+    }
+
+    #endregion
+
+    #region GROUND CHECK PHYSICS
+    
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
@@ -97,8 +112,5 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool IsFacingRight()
-    {
-        return transform.eulerAngles.y == 0;
-    } 
+    #endregion
 }
