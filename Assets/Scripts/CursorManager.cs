@@ -15,7 +15,7 @@ public class CursorManager : MonoBehaviour
 
     void Start()
     {
-        // Cursor.visible = false;
+        Cursor.visible = false;
         if (Application.isPlaying)
         {
             Cursor.lockState = CursorLockMode.None;

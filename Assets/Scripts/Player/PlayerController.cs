@@ -7,16 +7,24 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed = 10f;
-    [SerializeField] private float _jumpStrength = 10f;
+    [SerializeField] private float _jumpForce = 20f;
+
+    [Header("Ground Check Settings")]
+    [SerializeField] private Transform _feetCheck;
+    [SerializeField] private Vector2 _groundCheck;
+    [SerializeField] private LayerMask _groundLayer;
 
     private InputAction _moveAction, _jumpAction;
-
-    private bool _isGrounded = false;
     private Vector2 _movement;
 
     private Rigidbody2D _rb;
 
-    public void Awake() 
+    // private void Start()
+    // {
+    //     InputSystem.actions.FindAction("Jump").performed += ctx => OnJump();
+    // }
+
+    private void Awake() 
     {
         if (Instance == null) { Instance = this; }
         _moveAction = InputSystem.actions.FindAction("Move");
@@ -64,8 +72,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnJump()
     {
-        if (_jumpAction.WasPressedThisFrame() && _isGrounded) {
-            _rb.AddForce(Vector2.up * _jumpStrength, ForceMode2D.Impulse);
+        if (_jumpAction.WasPressedThisFrame() && CheckGrounded()) {
+            _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
         }
     }
 
@@ -96,20 +104,18 @@ public class PlayerController : MonoBehaviour
 
     #region GROUND CHECK PHYSICS
     
-    private void OnCollisionEnter2D(Collision2D other)
+    private bool CheckGrounded()
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            _isGrounded = true;
-        }
+        Collider2D isGrounded = Physics2D.OverlapBox(_feetCheck.position, _groundCheck, 0f, _groundLayer);
+        return isGrounded != null;
     }
 
-    private void OnCollisionExit2D(Collision2D other)
+    private void OnDrawGizmos()
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            _isGrounded = false;
-        }
+        if (_feetCheck == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(_feetCheck.position, _groundCheck);
     }
 
     #endregion
